@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import Transaction from './components/Transaction';
 import FormComponent from './components/FormComponent';
@@ -13,6 +13,8 @@ const Title = () => (
 
 function App() {
   const [items, setItems] = useState([]);
+  const [reportIncome, setReportIncome] = useState(0);
+  const [reportExpense, setReportExpense] = useState(0);
 
   const onAddNewItem = (newItem) => {
     setItems((prevItem) => {
@@ -20,8 +22,27 @@ function App() {
     });
   };
 
+  useEffect(() => {
+    const amounts = items.map((item) => item.amount);
+    const income = amounts
+      .filter((element) => element > 0)
+      .reduce((total, num) => total + num, 0);
+    const expense =
+      amounts
+        .filter((element) => element < 0)
+        .reduce((total, num) => total + num, 0) * -1;
+
+    setReportIncome(income);
+    setReportExpense(expense);
+  }, [items, reportIncome, reportExpense]);
+
   return (
-    <DataContext.Provider value={'test'}>
+    <DataContext.Provider
+      value={{
+        income: reportIncome,
+        expense: reportExpense,
+      }}
+    >
       <div className="container">
         <Title />
         <ReportComponent />
