@@ -1,4 +1,5 @@
-import { useEffect, useState, useReducer } from 'react';
+import { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import './App.css';
 import Transaction from './components/Transaction';
 import FormComponent from './components/FormComponent';
@@ -32,20 +33,9 @@ function App() {
         .filter((element) => element < 0)
         .reduce((total, num) => total + num, 0) * -1;
 
-    setReportIncome(income);
-    setReportExpense(expense);
+    setReportIncome(income.toFixed(2));
+    setReportExpense(expense.toFixed(2));
   }, [items, reportIncome, reportExpense]);
-
-  const [showReport, setShowReport] = useState(false);
-  const reducer = (state, action) => {
-    switch (action.type) {
-      case 'SHOW':
-        return setShowReport(true);
-      case 'HIDE':
-        return setShowReport(false);
-    }
-  };
-  const [result, dispatch] = useReducer(reducer, showReport);
 
   return (
     <DataContext.Provider
@@ -56,11 +46,28 @@ function App() {
     >
       <div className="container">
         <Title />
-        {showReport && <ReportComponent />}
-        <FormComponent onAddItem={onAddNewItem} />
-        <Transaction items={items} />
-        <button onClick={() => dispatch({ type: 'SHOW' })}>SHOW</button>
-        <button onClick={() => dispatch({ type: 'HIDE' })}>HIDE</button>
+        <Router>
+          <div>
+            <ul className="horizontal-menu">
+              <li>
+                <Link to="/">Account Info</Link>
+              </li>
+              <li>
+                <Link to="/add">Make a transaction</Link>
+              </li>
+            </ul>
+            <Routes>
+              <Route path="/" element={<ReportComponent />}></Route>
+              <Route
+                path="/add"
+                element={[
+                  <FormComponent onAddItem={onAddNewItem} />,
+                  <Transaction items={items} />,
+                ]}
+              ></Route>
+            </Routes>
+          </div>
+        </Router>
       </div>
     </DataContext.Provider>
   );
