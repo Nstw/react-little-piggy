@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useReducer } from 'react';
 import './App.css';
 import Transaction from './components/Transaction';
 import FormComponent from './components/FormComponent';
@@ -36,6 +36,17 @@ function App() {
     setReportExpense(expense);
   }, [items, reportIncome, reportExpense]);
 
+  const [showReport, setShowReport] = useState(false);
+  const reducer = (state, action) => {
+    switch (action.type) {
+      case 'SHOW':
+        return setShowReport(true);
+      case 'HIDE':
+        return setShowReport(false);
+    }
+  };
+  const [result, dispatch] = useReducer(reducer, showReport);
+
   return (
     <DataContext.Provider
       value={{
@@ -45,9 +56,11 @@ function App() {
     >
       <div className="container">
         <Title />
-        <ReportComponent />
+        {showReport && <ReportComponent />}
         <FormComponent onAddItem={onAddNewItem} />
         <Transaction items={items} />
+        <button onClick={() => dispatch({ type: 'SHOW' })}>SHOW</button>
+        <button onClick={() => dispatch({ type: 'HIDE' })}>HIDE</button>
       </div>
     </DataContext.Provider>
   );
