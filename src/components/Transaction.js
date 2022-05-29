@@ -4,10 +4,10 @@ import { v4 as uuidv4 } from 'uuid';
 
 const Transaction = () => {
   const data = [
-    { title: 'Hospital', amount: '2000' },
-    { title: 'Transportation', amount: '700' },
-    { title: 'Education', amount: '1500' },
-    { title: 'Food', amount: '999' },
+    { title: 'Hospital', amount: 2000 },
+    { title: 'Transportation', amount: 700 },
+    { title: 'Education', amount: 1500 },
+    { title: 'Food', amount: 999 },
   ];
   return (
     <ul className="item-list">
